@@ -11,26 +11,59 @@ body {
   padding: 20px;
 }
 
+/*--------------------Header----------------*/
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
+  text-align: center;
+  padding: 20px 0;
   margin-bottom: 20px;
 }
 
+header h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+header h2 {
+  font-size: 18px;
+  color: #555;
+  font-weight: normal;
+}
+
+#themeToggle {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/*----------Board Layout----------*/
 .board {
   display: flex;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
 }
 
 .column {
   background: white;
   padding: 15px;
-  border-radius: 8px;
-  width: 33%;
-  display: flex;
-  flex-direction: column;
+  border-radius: 10px;
+  min-height: 450px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  flex: 1;
 }
 
+.column h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+/*--------------------Task List Area----------------*/
 .taskList {
   margin-top: 10px;
   min-height: 300px;
@@ -39,11 +72,12 @@ header {
   border-radius: 6px;
 }
 
+/*--------------------Task Cards----------------*/
 .task {
   background: #fff;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 10px;
   cursor: grab;
-  border-left: 6px solid #4caf50;
+  border-left: 6px solid #3b82f6;
 }
