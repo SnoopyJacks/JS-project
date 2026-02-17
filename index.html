@@ -7,7 +7,34 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header></header>
-    <main></main>
+    <!-----------------Header------------------------>
+    <header>
+      <h1>Smart Kanban Board</h1>
+      <h2>Visual Project Management Tool</h2>
+      <button id="themeToggle">🌙</button>
+    </header>
+
+    <!-----------------Main------------------------>
+    <main class="board">
+      <div class="column" data-status="todo">
+        <h2>To Do</h2>
+        <button class="addTaskBtn" data-status="todo">Add Task</button>
+        <div class="taskList" id="todo"></div>
+      </div>
+
+      <div class="column" data-status="in-progress">
+        <h2>In Progress</h2>
+        <button class="addTaskBtn" data-status="in-progress">Add Task</button>
+        <div class="taskList" id="in-progress"></div>
+      </div>
+
+      <div class="column" data-status="done">
+        <h2>Done</h2>
+        <button class="addTaskBtn" data-status="done">Add Task</button>
+        <div class="taskList" id="done"></div>
+      </div>
+    </main>
+    <!-----------------Script------------------------>
+    <script src="script.js"></script>
   </body>
 </html>
