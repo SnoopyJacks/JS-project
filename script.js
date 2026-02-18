@@ -180,3 +180,26 @@ function escapeHtml(value) {
 
 // First paint
 renderTasks();
+
+// ---------------------------
+// Theme Toggle
+// ---------------------------
+const themeToggleBtn = document.getElementById("themeToggle");
+
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);
+
+themeToggleBtn.addEventListener("click", () => {
+  const isDark = document.body.classList.contains("dark");
+  const nextTheme = isDark ? "light" : "dark";
+
+  applyTheme(nextTheme);
+  localStorage.setItem("theme", nextTheme);
+});
+
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.body.classList.toggle("dark", isDark);
+
+  themeToggleBtn.textContent = isDark ? "☀️" : "🌙";
+}
