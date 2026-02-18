@@ -27,7 +27,6 @@ function renderTasks() {
     //create new div for the task card
     const taskElement = document.createElement("div");
     taskElement.classList.add("task");
-
     //Give each task ID attribute
     taskElement.setAttribute("data-id", task.id);
 
@@ -35,12 +34,16 @@ function renderTasks() {
     taskElement.innerHTML = `
     <h4>${task.title}</h4>
     <p>${task.description}</p>
+    <button class="editBtn>Edit</button>
+    <button class="deleteBtn>Delete</button>
     `;
 
-    //Find correct column to place task
-    const columnList = document.getElementById(task.status);
-    columnList.appendChild(taskElement);
+    document.getElementById(task.status).appendChild(taskElement);
   });
+
+  enableDragAndDrop();
+  enableDeleteButtons();
+  enableEditButtons();
 }
 
 //-----------------------------------------
@@ -92,10 +95,10 @@ renderTasks();
 //-----------------------------------------
 
 //Add drag events to every task
-function enableDragAndDrop () {
-  cont taskElements = document.querySelectorAll(".task");
+function enableDragAndDrop() {
+  const taskElements = document.querySelectorAll(".task");
 
-  taskElements.forEach(task => {
+  taskElements.forEach((task) => {
     task.setAttribute("draggable", "true");
 
     //Dragging Starts
@@ -106,6 +109,37 @@ function enableDragAndDrop () {
     //Dragging Ends
     task.addEventListener("dragstart", function () {
       task.classList.remove("dragging");
+    });
+  });
+
+  //Add drop support to tasklist columns
+  const taskLists = document.querySelectorAll(".taskList");
+
+  //when item goes over column
+  taskLists.forEach((list) => {
+    list.addEventListener("dragover", function (event) {
+      event.preventDefault(); //allows dropping
+      list.classList.add("drag-over");
+    });
+
+    //Item leaves column
+    list.addEventListener("dragleave", function () {
+      list.classList.remove("drag-over");
+    });
+
+    // Task Dropped
+    list.addEventListener("drop", function () {
+      const draggedTask = document.querySelector("dragging");
+      const taskId = draggedTask.getAttribute("data-id");
+      const newStatus = list.getAttribute("id");
+
+      // Update task array
+      tasks = tasks.map((task) =>
+        task.id == taskId ? { ...task, status: newStatus } : task,
+      );
+
+      saveTasks();
+      renderTasks();
     });
   });
 }
