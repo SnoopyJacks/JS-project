@@ -72,6 +72,11 @@ header h2 {
   border-radius: 6px;
 }
 
+.taskList.drag-over {
+  background-color: #e0e7ff;
+  border-color: #3b82f6;
+}
+
 /*--------------------Task Cards----------------*/
 .task {
   background: #fff;

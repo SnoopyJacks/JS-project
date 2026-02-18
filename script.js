@@ -86,3 +86,26 @@ addButtons.forEach((button) => {
 // STEP 5: Initial render when page loads
 //-----------------------------------------
 renderTasks();
+
+//-----------------------------------------
+// Drag and Drop
+//-----------------------------------------
+
+//Add drag events to every task
+function enableDragAndDrop () {
+  cont taskElements = document.querySelectorAll(".task");
+
+  taskElements.forEach(task => {
+    task.setAttribute("draggable", "true");
+
+    //Dragging Starts
+    task.addEventListener("dragstart", function () {
+      task.classList.add("dragging");
+    });
+
+    //Dragging Ends
+    task.addEventListener("dragstart", function () {
+      task.classList.remove("dragging");
+    });
+  });
+}
