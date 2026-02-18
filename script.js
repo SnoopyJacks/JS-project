@@ -163,3 +163,55 @@ function enableDeleteButtons() {
     });
   });
 }
+
+//-----------------------------------------
+// EDIT TASK
+//-----------------------------------------
+function enableEditButtons() {
+  document.querySelectorAll(".editBtn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const taskElement = btn.closest(".task");
+      if (!taskElement) return;
+
+      const taskId = taskElement.getAttribute("data-id");
+
+      //Find task to update
+      const taskIndex = tasks.findIndex((t) => String(t.id) === String(taskId));
+      if (taskIndex === -1) return;
+
+      const currentTask = tasks[taskIndex];
+
+      //Prompts prefill for editing
+      const newTitle = prompt("Edit task title:", currentTask.title);
+      if (newTitle === null) return; //cancel is pressed
+
+      const newDescription = prompt(
+        "Edit task description:",
+        currentTask.description || "",
+      );
+      if (newDescription === null) return;
+
+      //Update task
+      tasks[taskIndex] = {
+        ...currentTask,
+        title: newTitle.trim() || currentTask.title,
+        description: newDescription.trim(),
+      };
+
+      saveTasks();
+      renderTasks();
+    });
+  });
+}
+
+//-----------------------------------------
+// Helper: stops user text from breaking your HTML
+//-----------------------------------------
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
