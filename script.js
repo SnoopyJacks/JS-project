@@ -28,17 +28,18 @@ function renderTasks() {
     const taskElement = document.createElement("div");
     taskElement.classList.add("task");
     //Give each task ID attribute
-    taskElement.setAttribute("data-id", task.id);
+    taskElement.setAttribute("data-id", String(task.id));
 
     // Add HTML to card
     taskElement.innerHTML = `
-    <h4>${task.title}</h4>
-    <p>${task.description}</p>
-    <button class="editBtn>Edit</button>
-    <button class="deleteBtn>Delete</button>
+    <h4>${escapeHtml(task.title)}</h4>
+    <p>${escapeHtml(task.description)}</p>
+    <button class="editBtn type="button">Edit</button>
+    <button class="deleteBtn type="button">Delete</button>
     `;
 
-    document.getElementById(task.status).appendChild(taskElement);
+    const column = document.getElementById(task.status);
+    if (column) column.appendChild(taskElement);
   });
 
   enableDragAndDrop();
@@ -51,44 +52,27 @@ function renderTasks() {
 //-----------------------------------------
 
 //Select all "Add Task" buttons
-const addButtons = document.querySelectorAll(".addTaskBtn");
-
-//Add click listener for each button
-addButtons.forEach((button) => {
-  button.addEventListener("click", function () {
-    //Ask user for task title
+document.querySelectorAll(".addTaskBtn").forEach((btn) => {
+  btn.addEventListener("click", () => {
     const title = prompt("Enter task title:");
-    if (!title) return; // if user cancels, stop
+    if (!title) return;
 
-    //Ask user for description
-    const description = prompt("Enter task description") || "";
+    const description = prompt("Enter task description:") || "";
+    const status = btn.getAttribute("data-status");
 
-    // Determine the column the button belongs to
-    const status = button.getAttribute("data-status");
-
-    // Create a new task object
-    const newTask = {
+    tasks.push({
       id: Date.now(),
-      title: title,
-      description: description,
-      status: status,
-    };
-
-    //Add new task to list
-    tasks.push(newTask);
-
-    //Save updated task list
+      title,
+      description,
+      status;
+    });
+  
     saveTasks();
-
-    //Reload so new task appears
     renderTasks();
   });
 });
 
-//-----------------------------------------
-// STEP 5: Initial render when page loads
-//-----------------------------------------
-renderTasks();
+
 
 //-----------------------------------------
 // Drag and Drop
@@ -215,3 +199,5 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+renderTasks();
