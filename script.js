@@ -186,15 +186,19 @@ renderTasks();
 // ---------------------------
 const themeToggleBtn = document.getElementById("themeToggle");
 
-const savedTheme = localStorage.getItem("theme") || "light";
-applyTheme(savedTheme);
+if (themeToggleBtn) {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  setTheme(savedTheme);
 
-themeToggleBtn.addEventListener("click", () => {
-  const current = document.body.getAttribute("data-theme") || "light";
-  const next = current === "dark" ? "light" : "dark";
-  setTheme(next);
-  localStorage.setItem("theme", next);
-});
+  themeToggleBtn.addEventListener("click", () => {
+    const current = document.body.getAttribute("data-theme") || "light";
+    const next = current === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("theme", next);
+  });
+} else {
+  console.error('Theme toggle button not found. Check id="themeToggle".');
+}
 
 function setTheme(theme) {
   document.body.setAttribute("data-theme", theme);
