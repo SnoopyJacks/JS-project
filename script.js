@@ -1,57 +1,51 @@
 //-----------------------------------------
-// STEP 1: Load tasks from localStorage
+// Load tasks from localStorage
 //-----------------------------------------
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 //-----------------------------------------
-// STEP 2: Save tasks back to localStorage
+// Save tasks to localStorage
 //-----------------------------------------
-
 function saveTasks() {
+  // Why: localStorage only stores strings, so we JSON.stringify
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 //-----------------------------------------
-// STEP 3: Display all Tasks
+// Render tasks into columns
 //-----------------------------------------
-
 function renderTasks() {
-  //Clear task list before re-adding tasks.
+  // Why: prevent duplicates when re-rendering
   document.querySelectorAll(".taskList").forEach((list) => {
     list.innerHTML = "";
   });
 
-  //Loop through all saved tasks
   tasks.forEach((task) => {
-    //create new div for the task card
-    const taskElement = document.createElement("div");
-    taskElement.classList.add("task");
-    //Give each task ID attribute
-    taskElement.setAttribute("data-id", String(task.id));
+    const taskEl = document.createElement("div");
+    taskEl.classList.add("task");
+    taskEl.setAttribute("data-id", String(task.id));
 
-    // Add HTML to card
-    taskElement.innerHTML = `
-    <h4>${escapeHtml(task.title)}</h4>
-    <p>${escapeHtml(task.description)}</p>
-    <button class="editBtn type="button">Edit</button>
-    <button class="deleteBtn type="button">Delete</button>
+    // Why: your original code had broken quotes; this fixes it
+    taskEl.innerHTML = `
+      <h4>${escapeHtml(task.title)}</h4>
+      <p>${escapeHtml(task.description)}</p>
+      <button class="editBtn" type="button">Edit</button>
+      <button class="deleteBtn" type="button">Delete</button>
     `;
 
     const column = document.getElementById(task.status);
-    if (column) column.appendChild(taskElement);
+    if (column) column.appendChild(taskEl);
   });
 
+  // Why: events need to be re-attached because we rebuilt the DOM
   enableDragAndDrop();
   enableDeleteButtons();
   enableEditButtons();
 }
 
 //-----------------------------------------
-// STEP 4: Add Task Button Clicks
+// Add Task buttons
 //-----------------------------------------
-
-//Select all "Add Task" buttons
 document.querySelectorAll(".addTaskBtn").forEach((btn) => {
   btn.addEventListener("click", () => {
     const title = prompt("Enter task title:");
@@ -64,62 +58,55 @@ document.querySelectorAll(".addTaskBtn").forEach((btn) => {
       id: Date.now(),
       title,
       description,
-      status;
+      status,
     });
-  
+
     saveTasks();
     renderTasks();
   });
 });
 
-
-
 //-----------------------------------------
 // Drag and Drop
 //-----------------------------------------
-
-//Add drag events to every task
 function enableDragAndDrop() {
-  const taskElements = document.querySelectorAll(".task");
+  document.querySelectorAll(".task").forEach((taskEl) => {
+    taskEl.setAttribute("draggable", "true");
 
-  taskElements.forEach((task) => {
-    task.setAttribute("draggable", "true");
-
-    //Dragging Starts
-    task.addEventListener("dragstart", function () {
-      task.classList.add("dragging");
+    taskEl.addEventListener("dragstart", () => {
+      // Why: we mark it so drop() can find it
+      taskEl.classList.add("dragging");
     });
 
-    //Dragging Ends
-    task.addEventListener("dragstart", function () {
-      task.classList.remove("dragging");
+    taskEl.addEventListener("dragend", () => {
+      // Why: cleanup after drop
+      taskEl.classList.remove("dragging");
     });
   });
 
-  //Add drop support to tasklist columns
-  const taskLists = document.querySelectorAll(".taskList");
-
-  //when item goes over column
-  taskLists.forEach((list) => {
-    list.addEventListener("dragover", function (event) {
-      event.preventDefault(); //allows dropping
+  document.querySelectorAll(".taskList").forEach((list) => {
+    list.addEventListener("dragover", (e) => {
+      // Why: required for drop to work
+      e.preventDefault();
       list.classList.add("drag-over");
     });
 
-    //Item leaves column
-    list.addEventListener("dragleave", function () {
+    list.addEventListener("dragleave", () => {
       list.classList.remove("drag-over");
     });
 
-    // Task Dropped
-    list.addEventListener("drop", function () {
-      const draggedTask = document.querySelector("dragging");
-      const taskId = draggedTask.getAttribute("data-id");
+    list.addEventListener("drop", () => {
+      list.classList.remove("drag-over");
+
+      // Why: dot = class selector
+      const dragged = document.querySelector(".dragging");
+      if (!dragged) return;
+
+      const taskId = dragged.getAttribute("data-id");
       const newStatus = list.getAttribute("id");
 
-      // Update task array
-      tasks = tasks.map((task) =>
-        task.id == taskId ? { ...task, status: newStatus } : task,
+      tasks = tasks.map((t) =>
+        String(t.id) === String(taskId) ? { ...t, status: newStatus } : t,
       );
 
       saveTasks();
@@ -129,18 +116,16 @@ function enableDragAndDrop() {
 }
 
 //-----------------------------------------
-// DELETE TASK
+// Delete
 //-----------------------------------------
 function enableDeleteButtons() {
-  const deleteButtons = document.querySelectorAll(".deleteBtn");
+  document.querySelectorAll(".deleteBtn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".task");
+      if (!card) return;
 
-  deleteButtons.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const taskElement = btn.parentElement;
-      const taskId = taskElement.getAttribute("data-id");
-
-      //Remove from array
-      tasks = tasks.filter((task) => task.id != taskId);
+      const taskId = card.getAttribute("data-id");
+      tasks = tasks.filter((t) => String(t.id) !== String(taskId));
 
       saveTasks();
       renderTasks();
@@ -149,37 +134,30 @@ function enableDeleteButtons() {
 }
 
 //-----------------------------------------
-// EDIT TASK
+// Edit
 //-----------------------------------------
 function enableEditButtons() {
   document.querySelectorAll(".editBtn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const taskElement = btn.closest(".task");
-      if (!taskElement) return;
+      const card = btn.closest(".task");
+      if (!card) return;
 
-      const taskId = taskElement.getAttribute("data-id");
+      const taskId = card.getAttribute("data-id");
+      const idx = tasks.findIndex((t) => String(t.id) === String(taskId));
+      if (idx === -1) return;
 
-      //Find task to update
-      const taskIndex = tasks.findIndex((t) => String(t.id) === String(taskId));
-      if (taskIndex === -1) return;
+      const current = tasks[idx];
 
-      const currentTask = tasks[taskIndex];
+      const newTitle = prompt("Edit title:", current.title);
+      if (newTitle === null) return;
 
-      //Prompts prefill for editing
-      const newTitle = prompt("Edit task title:", currentTask.title);
-      if (newTitle === null) return; //cancel is pressed
+      const newDesc = prompt("Edit description:", current.description || "");
+      if (newDesc === null) return;
 
-      const newDescription = prompt(
-        "Edit task description:",
-        currentTask.description || "",
-      );
-      if (newDescription === null) return;
-
-      //Update task
-      tasks[taskIndex] = {
-        ...currentTask,
-        title: newTitle.trim() || currentTask.title,
-        description: newDescription.trim(),
+      tasks[idx] = {
+        ...current,
+        title: newTitle.trim() || current.title,
+        description: newDesc.trim(),
       };
 
       saveTasks();
@@ -189,7 +167,7 @@ function enableEditButtons() {
 }
 
 //-----------------------------------------
-// Helper: stops user text from breaking your HTML
+// Small safety helper for innerHTML
 //-----------------------------------------
 function escapeHtml(value) {
   return String(value)
@@ -200,4 +178,5 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+// First paint
 renderTasks();
