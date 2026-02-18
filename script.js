@@ -143,3 +143,23 @@ function enableDragAndDrop() {
     });
   });
 }
+
+//-----------------------------------------
+// DELETE TASK
+//-----------------------------------------
+function enableDeleteButtons() {
+  const deleteButtons = document.querySelectorAll(".deleteBtn");
+
+  deleteButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const taskElement = btn.parentElement;
+      const taskId = taskElement.getAttribute("data-id");
+
+      //Remove from array
+      tasks = tasks.filter((task) => task.id != taskId);
+
+      saveTasks();
+      renderTasks();
+    });
+  });
+}
