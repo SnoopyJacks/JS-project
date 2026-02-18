@@ -1,97 +1,257 @@
+:root {
+  /* Light palette (modern tech: deep navy + soft glass) */
+  --bodylight: #f6f8ff;
+  --bodycolorlight: #0b1220;
+
+  --headerlight: rgba(11, 18, 32, 0.04);
+
+  --columnlight: rgba(11, 18, 32, 0.035);
+
+  --tasklistlight: rgba(11, 18, 32, 0.03);
+  --dragoverlight: rgba(56, 189, 248, 0.18);
+  --borderlight: rgba(11, 18, 32, 0.12);
+
+  /* Dark palette (deep space + neon accents) */
+  --bodydark: #050816;
+  --bodycolordark: #e6f0ff;
+
+  --headerdark: rgba(230, 240, 255, 0.06);
+
+  --columndark: rgba(230, 240, 255, 0.04);
+
+  --tasklistdark: rgba(230, 240, 255, 0.06);
+  --dragoverdark: rgba(168, 85, 247, 0.2);
+  --borderdark: rgba(230, 240, 255, 0.14);
+
+  /* Accents */
+  --accent-cyan: #38bdf8;
+  --accent-purple: #a855f7;
+  --accent-green: #34d399;
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+
+  /* Active variables (default = light) */
+  --body-bg: var(--bodylight);
+  --body-fg: var(--bodycolorlight);
+  --header-bg: var(--headerlight);
+  --column-bg: var(--columnlight);
+  --tasklist-bg: var(--tasklistlight);
+  --dragover-bg: var(--dragoverlight);
+  --border: var(--borderlight);
+}
+
+/* Switch active variables when dark mode is on */
+body[data-theme="dark"] {
+  --body-bg: var(--bodydark);
+  --body-fg: var(--bodycolordark);
+  --header-bg: var(--headerdark);
+  --column-bg: var(--columndark);
+  --tasklist-bg: var(--tasklistdark);
+  --dragover-bg: var(--dragoverdark);
+  --border: var(--borderdark);
+}
+
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: #f3f3f3;
-  color: #333;
-  padding: 20px;
+  margin: 0;
+  background: var(--body-bg);
+  color: var(--body-fg);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
 }
 
-body.dark {
-  background: #111;
-  color: #f5f5f5;
-  padding: 20px;
-}
-
-#themeToggle {
-  cursor: pointer;
-}
 /*--------------------Header----------------*/
 header {
-  position: relative;
-  text-align: center;
-  padding: 20px 0;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  margin: 16px;
+
+  background: var(--header-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+
+  transition:
+    background 180ms ease,
+    border-color 180ms;
+}
+
+header h1,
+header h2 {
+  margin: 0;
 }
 
 header h1 {
-  font-size: 32px;
-  margin-bottom: 5px;
+  font-size: 22px;
+  letter-spacing: 0.3px;
 }
 
 header h2 {
-  font-size: 18px;
-  color: #555;
-  font-weight: normal;
+  font-size: 15px;
+  opacity: 0.8;
+  font-weight: 500;
 }
 
 #themeToggle {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 24px;
-  background: none;
-  border: none;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 14px;
+  padding: 10px 12px;
   cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 180ms ease;
 }
 
+#themeToggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-cyan);
+}
 /*----------Board Layout----------*/
 .board {
-  display: flex;
-  gap: 20px;
-  width: 100%;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 0 16px 18px;
 }
 
+@media (max-width: 900px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*----------Column Layout----------*/
 .column {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  min-height: 450px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  flex: 1;
+  background: var(--column-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease;
 }
 
-.column h2 {
-  margin-bottom: 10px;
-  font-size: 20px;
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 6px 12px;
 }
 
-/*--------------------Task List Area----------------*/
+.columnHeader h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.addTaskBtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 14px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 180ms ease;
+}
+
+.addTaskBtn:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-purple);
+}
+
+/* Drop zone list */
 .taskList {
-  margin-top: 10px;
-  min-height: 300px;
-  padding: 10px;
-  border: 2px dashed #ccc;
-  border-radius: 6px;
+  background: var(--tasklist-bg);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  min-height: 160px;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease;
 }
 
 .taskList.drag-over {
-  background-color: #e0e7ff;
-  border-color: #3b82f6;
+  background: var(--dragover-bg);
+  border-color: var(--accent-cyan);
 }
 
-/*--------------------Task Cards----------------*/
+/* ----------------------------------------------------
+   Task cards
+   ---------------------------------------------------- */
 .task {
-  background: #fff;
-  padding: 10px;
-  border-radius: 6px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
   margin-bottom: 10px;
-  cursor: grab;
-  border-left: 6px solid #3b82f6;
+
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+
+  transition:
+    transform 120ms ease,
+    border-color 180ms ease;
+}
+
+body[data-theme="dark"] .task {
+  background: rgba(230, 240, 255, 0.06);
+}
+
+.task h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.task p {
+  margin: 0 0 10px;
+  opacity: 0.85;
+  line-height: 20px;
+}
+
+/* Buttons inside tasks */
+.task button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  border-radius: 12px;
+  padding: 7px 10px;
+  cursor: pointer;
+  margin-right: 8px;
+
+  transition:
+    transform 120ms ease,
+    border-color 180ms ease;
+}
+
+.task button:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-cyan);
+}
+
+.task .deleteBtn:hover {
+  border-color: var(--accent-purple);
+}
+
+.task.dragging {
+  outline: 2px solid var(--accent-purple);
+  transform: scale(1.01);
+}
+
+/* Keyboard focus */
+button:focus-visible {
+  outline: 2px solid var(--accent-green);
+  outline-offset: 2px;
 }

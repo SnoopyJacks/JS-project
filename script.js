@@ -190,16 +190,14 @@ const savedTheme = localStorage.getItem("theme") || "light";
 applyTheme(savedTheme);
 
 themeToggleBtn.addEventListener("click", () => {
-  const isDark = document.body.classList.contains("dark");
-  const nextTheme = isDark ? "light" : "dark";
-
-  applyTheme(nextTheme);
-  localStorage.setItem("theme", nextTheme);
+  const current = document.body.getAttribute("data-theme") || "light";
+  const next = current === "dark" ? "light" : "dark";
+  setTheme(next);
+  localStorage.setItem("theme", next);
 });
 
-function applyTheme(theme) {
-  const isDark = theme === "dark";
-  document.body.classList.toggle("dark", isDark);
+function setTheme(theme) {
+  document.body.setAttribute("data-theme", theme);
 
-  themeToggleBtn.textContent = isDark ? "☀️" : "🌙";
+  themeToggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
 }
