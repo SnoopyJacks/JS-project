@@ -1,5 +1,5 @@
+
 :root {
-  /* Light palette (modern tech: deep navy + soft glass) */
   --bodylight: #f6f8ff;
   --bodycolorlight: #0b1220;
 
@@ -9,7 +9,6 @@
   --dragoverlight: rgba(56, 189, 248, 0.18);
   --borderlight: rgba(11, 18, 32, 0.12);
 
-  /* Dark palette (deep space + neon accents) */
   --bodydark: #050816;
   --bodycolordark: #e6f0ff;
 
@@ -19,14 +18,12 @@
   --dragoverdark: rgba(168, 85, 247, 0.2);
   --borderdark: rgba(230, 240, 255, 0.14);
 
-  /* Accents */
   --accent-cyan: #38bdf8;
   --accent-purple: #a855f7;
   --accent-green: #34d399;
   --accent-pink: #fb7185;
   --shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
 
-  /* Active variables (default = light) */
   --body-bg: var(--bodylight);
   --body-fg: var(--bodycolorlight);
   --header-bg: var(--headerlight);
@@ -62,6 +59,7 @@ body {
 }
 
 body {
+  min-height: 100dvh;
   margin: 0;
   background: radial-gradient(
       1200px 800px at 20% -10%,
@@ -84,7 +82,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
@@ -194,7 +191,7 @@ header h2 {
 /*----------Board Layout----------*/
 .board {
   display: grid;
-  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
   padding: 0 16px 18px;
 
@@ -209,6 +206,21 @@ header h2 {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  header h1 {
+    font-size: 20px;
+  }
+
+  header h2 {
+    font-size: 13px;
   }
 }
 
@@ -272,33 +284,12 @@ header h2 {
 .colTitle {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.colTitle h3 {
-  margin: 0;
-  font-size: 17px;
-  white-space: nowrap;
-}
-
-.countPill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 22px;
-  min-width: 28px;
-  padding: 0 8px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--glass);
-  font-size: 12px;
-  opacity: 0.92;
+  gap: 8px;
 }
 
 .colIcon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--glass);
@@ -309,15 +300,24 @@ header h2 {
 .icon {
   width: 18px;
   height: 18px;
-  display: block;
 }
 
+.countPill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  opacity: 0.9;
+}
+
+/* Add Task button */
 .addTaskBtn {
   border: 1px solid var(--border);
   background: var(--glass);
   color: inherit;
   border-radius: 14px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   cursor: pointer;
   transition:
     transform 120ms ease,
@@ -337,134 +337,96 @@ header h2 {
 }
 
 .btnIcon {
-  width: 22px;
-  height: 22px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(168, 85, 247, 0.12);
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1;
 }
 
-/* Drop zone list */
 .taskList {
   background: var(--tasklist-bg);
-  border: 1px dashed var(--border);
-  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  min-height: 340px;
   padding: 12px;
-  min-height: 160px;
-  transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    transform 160ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .taskList.drag-over {
   background: var(--dragover-bg);
-  border-color: var(--accent-cyan);
-  transform: scale(1.01);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
-/* ----------------------------------------------------
-   Task cards
-   ---------------------------------------------------- */
+/* Task Card */
 .task {
   border: 1px solid var(--border);
+  background: var(--glass);
   border-radius: 16px;
   padding: 12px;
-  margin-bottom: 10px;
-
-  background: rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow);
-
-  transition:
-    transform 140ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
-
+  backdrop-filter: blur(10px);
+  cursor: grab;
   position: relative;
-  overflow: hidden;
-}
-
-body[data-theme="dark"] .task {
-  background: rgba(230, 240, 255, 0.06);
-}
-
-.task:hover {
-  transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.55);
-}
-
-.task h4 {
-  margin: 0 0 6px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.task h4::before {
-  content: "●";
-  font-size: 10px;
-  color: var(--accent-cyan);
-  opacity: 0.9;
-}
-
-.task p {
-  margin: 0 0 10px;
-  opacity: 0.85;
-  line-height: 20px;
-}
-
-/* Buttons inside tasks */
-.task button {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: inherit;
-  border-radius: 12px;
-  padding: 7px 10px;
-  cursor: pointer;
-  margin-right: 8px;
 
   transition:
     transform 120ms ease,
     border-color 180ms ease,
     background 180ms ease;
+}
+
+.task:active {
+  cursor: grabbing;
+}
+
+.task.dragging {
+  opacity: 0.7;
+  transform: scale(0.98);
+  border-color: var(--accent-cyan);
+}
+
+.task h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.task p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  opacity: 0.85;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+/* Task buttons */
+button {
+  touch-action: manipulation;
+}
+
+.task button {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-right: 8px;
   position: relative;
   overflow: hidden;
+
+  transition:
+    transform 120ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 
 .task button:hover {
   transform: translateY(-1px);
-  border-color: var(--accent-cyan);
-  background: var(--glass);
+  border-color: var(--accent-green);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.task .deleteBtn:hover {
+.task button.deleteBtn:hover {
   border-color: var(--accent-pink);
-}
-
-.task.dragging {
-  outline: 2px solid var(--accent-purple);
-  transform: scale(1.02) rotate(-0.4deg);
-}
-
-/* Small "shine" accent on cards */
-.task::after {
-  content: "";
-  position: absolute;
-  inset: -80px -120px auto auto;
-  width: 220px;
-  height: 220px;
-  transform: rotate(25deg);
-  background: radial-gradient(
-    closest-side,
-    rgba(56, 189, 248, 0.22),
-    transparent 70%
-  );
-  opacity: 0.7;
-  pointer-events: none;
 }
 
 /* Keyboard focus */
@@ -473,7 +435,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Ripple element (added by JS) */
 .ripple {
   position: absolute;
   border-radius: 999px;
@@ -518,3 +479,7 @@ body[data-theme="dark"] .toast {
   opacity: 1;
   transform: translateX(-50%) translateY(-6px);
 }
+
+
+
+
