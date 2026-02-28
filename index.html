@@ -9,33 +9,103 @@
   <body>
     <!-----------------Header------------------------>
     <header>
-      <h1>Smart Kanban Board</h1>
-      <h2>Visual Project Management Tool</h2>
-      <button id="themeToggle" type="button" aria-label="Toggle theme">
+      <div class="brand">
+        <div class="logoMark">
+          <svg viewBox="0 0 24 24" class="icon">
+            <path
+              d="M4 6a2 2 0 0 1 2-2h3v16H6a2 2 0 0 1-2-2V6Zm8-2h6a2 2 0 0 1 2 2v3h-8V4Zm0 7h8v7a2 2 0 0 1-2 2h-6V11Z"
+              fill="currentColor"
+              />
+          </svg>
+        </div>
+        <div>  
+          <h1>Smart Kanban Board</h1>
+          <h2>Visual Project Management Tool</h2>
+        </div>
+      </div>  
+
+      <div class="headerActions">
+        <button id="themeToggle" type="button" aria-label="Toggle theme">
         🌙
       </button>
-    </header>
+    </div>
+  </header>
 
     <!-----------------Main------------------------>
     <main class="board">
-      <div class="column" data-status="todo">
-        <h2>To Do</h2>
-        <button class="addTaskBtn" data-status="todo">Add Task</button>
-        <div class="taskList" id="todo"></div>
-      </div>
+      <section class="column" data-status="todo">
+        <div class="columnHeader">
+          <div class="colTitle">
+            <span class="colIcon">
+              <svg viewBox="0 0 24 24" class="icon">
+                <path
+                  d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 6h6v2H9V9Zm0 4h6v2H9v-2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <h3>To Do</h3>
+            <span class="countPill" id="count-todo">0</span>
+          </div>
 
-      <div class="column" data-status="in-progress">
-        <h2>In Progress</h2>
-        <button class="addTaskBtn" data-status="in-progress">Add Task</button>
+          <button class="addTaskBtn" data-status="todo" type="button">
+            <span class="btnIcon">+</span>
+            Add Task
+            </button>
+          <div class="taskList" id="todo"></div>
+        </section>
+
+        <section class="column" data-status="in-progress">
+          <div class="colTitle">
+            <span class="colIcon">
+              <svg viewBox="0 0 24 24" class="icon">
+                <path
+                  d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 5v5.2l3.4 2 .9-1.5-2.8-1.7V7h-1.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <h3>In Progress</h3>
+            <span class="countPill"
+            id="count-in-progress"
+            >0</span>
+          </div>
+
+          <button class="addTaskBtn" data-status="in-progress" type="button">
+            <span class="btnIcon">+</span>
+            Add Task
+          </button>
+        </div>
         <div class="taskList" id="in-progress"></div>
+      </section>
+
+      <section class="column" data-status="done">
+        <div class="columnHeader">
+          <div class="colTitle">
+            <span class="colIcon">
+              <svg viewBox="0 0 24 24" class="icon">
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span> 
+        <h3>Done</h3>
+        <span class="countPill" id="count-done">0</span>
       </div>
 
-      <div class="column" data-status="done">
-        <h2>Done</h2>
-        <button class="addTaskBtn" data-status="done">Add Task</button>
+        <button class="addTaskBtn" data-status="done" type="button">
+          <span class="btnIcon">+</span>
+          Add Task
+        </button>
+        </div>  
         <div class="taskList" id="done"></div>
       </div>
-    </main>
+    </section>
+   </main>
+
+<!------------Toast-------------->
+  <div class="toast" id="toast" role="status"></div>
     <!-----------------Script------------------------>
     <script src="script.js"></script>
   </body>
