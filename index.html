@@ -18,6 +18,7 @@
               />
           </svg>
         </div>
+
         <div>  
           <h1>Smart Kanban Board</h1>
           <h2>Visual Project Management Tool</h2>
@@ -25,14 +26,14 @@
       </div>  
 
       <div class="headerActions">
-        <button id="themeToggle" type="button" aria-label="Toggle theme">
+        <button id="themeToggle" type="button" class="iconBtn">
         🌙
       </button>
     </div>
   </header>
 
     <!-----------------Main------------------------>
-    <main class="board">
+    <main class="board" id="board">
       <section class="column" data-status="todo">
         <div class="columnHeader">
           <div class="colTitle">
@@ -52,11 +53,13 @@
             <span class="btnIcon">+</span>
             Add Task
             </button>
-          <div class="taskList" id="todo"></div>
+        </div>
+        <div class="taskList" id="todo"></div>
         </section>
 
         <section class="column" data-status="in-progress">
-          <div class="colTitle">
+          <div class="columnHeader">          
+            <div class="colTitle">
             <span class="colIcon">
               <svg viewBox="0 0 24 24" class="icon">
                 <path
@@ -76,6 +79,7 @@
             Add Task
           </button>
         </div>
+
         <div class="taskList" id="in-progress"></div>
       </section>
 
@@ -100,7 +104,6 @@
         </button>
         </div>  
         <div class="taskList" id="done"></div>
-      </div>
     </section>
    </main>
 
